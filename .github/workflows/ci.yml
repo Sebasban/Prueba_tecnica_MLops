@@ -19,8 +19,12 @@ jobs:
       - name: Validate data (Great Expectations)
         run: |
           pip install great_expectations
-          python -m great_expectations checkpoint run my_checkpoint
+          PYTHON_BIN_DIR=$(python -c "import sys; print(sys.prefix + '/bin')")
+          echo "$PYTHON_BIN_DIR" >> $GITHUB_PATH
           
+          # Ahora, great_expectations debería estar en el PATH
+          great_expectations checkpoint run my_checkpoint
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
