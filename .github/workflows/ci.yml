@@ -35,7 +35,7 @@ jobs:
       - name: Run pytest
         run: |
           pytest PruebaTecnicaMLopsRiesgos/tests/test.py  --junitxml=reports/jun
-          
+
       - name: Upload test report
         uses: actions/upload-artifact@v4
         with:
