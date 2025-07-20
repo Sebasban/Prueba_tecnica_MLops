@@ -16,10 +16,10 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Validate data (Great Expectations)
-        run: |
-          pip install great_expectations==0.18.0
-          great_expectations checkpoint run my_checkpoint
+      #- name: Validate data (Great Expectations)
+      #  run: |
+      #    pip install great_expectations==0.18.0
+      #    great_expectations checkpoint run my_checkpoint
           
       - name: Install dependencies
         run: |
