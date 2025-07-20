@@ -19,7 +19,7 @@ jobs:
       - name: Validate data (Great Expectations)
         run: |
           pip install great_expectations==0.18.0
-          python -m great_expectations.cli checkpoint run my_checkpoint
+          python -m great_expectations checkpoint run my_checkpoint
           
       - name: Install dependencies
         run: |
