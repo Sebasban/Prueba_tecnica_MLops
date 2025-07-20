@@ -46,10 +46,10 @@ jobs:
           IMAGE_URI=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
           docker push "$IMAGE_URI"
 
-      #- name: Upload model artifact (.pkl) to S3
-      #  run: |
-      #    aws s3 cp PruebaTecnicaMLopsRiesgos/artifacts/mejor_modelo.pkl s3://${{ env.S3_BUCKET }}/${{ env.MODEL_ARTIFACT_PATH }}/mejor_modelo.pkl
-#
-      #- name: Upload vectorizer artifact to S3
-      #  run: |
-      #    aws s3 cp vectorizer_tfidf.pkl s3://${{ env.S3_BUCKET }}/${{ env.MODEL_ARTIFACT_PATH }}/vectorizer_tfidf.pkl
+      - name: Upload model artifact (.pkl) to S3
+        run: |
+          aws s3 cp PruebaTecnicaMLopsRiesgos/artifacts/mejor_modelo.pkl s3://${{ env.S3_BUCKET }}/${{ env.MODEL_ARTIFACT_PATH }}/mejor_modelo.pkl
+
+      - name: Upload vectorizer artifact to S3
+        run: |
+          aws s3 cp vectorizer_tfidf.pkl s3://${{ env.S3_BUCKET }}/${{ env.MODEL_ARTIFACT_PATH }}/vectorizer_tfidf.pkl
