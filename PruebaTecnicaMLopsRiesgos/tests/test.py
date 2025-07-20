@@ -2,27 +2,6 @@ import sys
 import os
 import inspect
 import pytest
-
-# Ensure the project root is on sys.path
-current_dir = os.path.dirname(__file__)
-repo_root = os.path.abspath(os.path.join(current_dir, ".."))
-sys.path.insert(0, repo_root)
-
-# Tests for Constants enum
-from PruebaTecnicaMLopsRiesgos.extra.utils.constants.constants import Constants
-
-
-def test_constants_values():
-    # Check basic types and values
-    assert isinstance(Constants.path.value, str)
-    assert Constants.name_file.value == "Questions.csv"
-    assert isinstance(Constants.strategies_order.value, list)
-    assert "Extractor" in Constants.strategies_order.value
-    assert Constants.format.value == "csv"
-    assert Constants.mode.value == "overwrite"
-    assert Constants.name_out_file.value == "question_curated"
-
-
 # Tests for Factory
 from PruebaTecnicaMLopsRiesgos.extra.utils.factory.factory import Factory
 from PruebaTecnicaMLopsRiesgos.extra.utils.extract.extract import Extractor
@@ -49,6 +28,40 @@ from PruebaTecnicaMLopsRiesgos.extra.utils.transforms.stopwords_remove import (
 )
 from PruebaTecnicaMLopsRiesgos.extra.utils.transforms.drop_columns import DropColumns
 from PruebaTecnicaMLopsRiesgos.extra.utils.load.load import Loader
+# Tests for Constants enum
+from PruebaTecnicaMLopsRiesgos.extra.utils.constants.constants import Constants
+# Tests for loader
+from PruebaTecnicaMLopsRiesgos.extra.utils.load.load import Loader
+# Tests for Extractor
+from PruebaTecnicaMLopsRiesgos.extra.utils.extract.extract import Extractor
+
+# Tests for interface abstract base classes
+from PruebaTecnicaMLopsRiesgos.extra.utils.interfaces_strategies.extract_strategy_interface import (
+    ExtractStrategy,
+)
+from PruebaTecnicaMLopsRiesgos.extra.utils.interfaces_strategies.transform_strategy_interface import (
+    TransformStrategy,
+)
+
+# Ensure the project root is on sys.path
+current_dir = os.path.dirname(__file__)
+repo_root = os.path.abspath(os.path.join(current_dir, ".."))
+sys.path.insert(0, repo_root)
+
+
+
+
+def test_constants_values():
+    # Check basic types and values
+    assert isinstance(Constants.path.value, str)
+    assert Constants.name_file.value == "Questions.csv"
+    assert isinstance(Constants.strategies_order.value, list)
+    assert "Extractor" in Constants.strategies_order.value
+    assert Constants.format.value == "csv"
+    assert Constants.mode.value == "overwrite"
+    assert Constants.name_out_file.value == "question_curated"
+
+
 
 valid_strategies = {
     "Extractor": Extractor,
@@ -79,13 +92,6 @@ def test_factory_invalid_strategy():
         Factory.factory("InvalidStrategy")
 
 
-# Tests for interface abstract base classes
-from PruebaTecnicaMLopsRiesgos.extra.utils.interfaces_strategies.extract_strategy_interface import (
-    ExtractStrategy,
-)
-from PruebaTecnicaMLopsRiesgos.extra.utils.interfaces_strategies.transform_strategy_interface import (
-    TransformStrategy,
-)
 
 
 def test_extract_strategy_is_abstract():
@@ -98,8 +104,7 @@ def test_transform_strategy_is_abstract():
         TransformStrategy()
 
 
-# Tests for Extractor
-from PruebaTecnicaMLopsRiesgos.extra.utils.extract.extract import Extractor
+
 
 
 class FakeDF:
@@ -165,8 +170,7 @@ def test_extractor_extract_reads_and_drops():
     assert df.drop_called == "Unnamed: 0"
 
 
-# Tests for loader
-from PruebaTecnicaMLopsRiesgos.extra.utils.load.load import Loader
+
 
 
 class DummyWriter:
