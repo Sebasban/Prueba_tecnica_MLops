@@ -17,7 +17,7 @@ RUN apt-get update \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
-COPY PruebaTecnicaMLopsRiesgosInference/inference.py ./
+COPY inference.py ./
 
 RUN chmod +x inference.py
 ENTRYPOINT ["python", "inference.py"]
