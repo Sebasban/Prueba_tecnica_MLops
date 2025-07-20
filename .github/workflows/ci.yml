@@ -19,7 +19,21 @@ jobs:
       - name: Validate data (Great Expectations)
         run: |
           pip install great_expectations
-          python -m great_expectations.cli checkpoint run my_checkpoint
+          python - << 'EOF'
+          import sys
+          import great_expectations as ge
+          
+          # Carga tu Data Context (será el directorio ./great_expectations por defecto)
+          context = ge.get_context()
+          
+          # Ejecuta el checkpoint
+          result = context.run_checkpoint(checkpoint_name="my_checkpoint")
+          print("✅ Checkpoint result:", result["success"])
+          
+          # Si falla, marcamos el step como error
+          if not result["success"]:
+              sys.exit(1)
+          EOF
 
       - name: Install dependencies
         run: |
