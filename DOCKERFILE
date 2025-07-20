@@ -1,0 +1,23 @@
+FROM python:3.10-slim
+
+LABEL maintainer="Analitica de riesgos"
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
+
+WORKDIR /opt/ml/code
+
+COPY requirements.txt ./
+
+# Instala dependencias de sistema y Python, luego limpia cachés
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends build-essential \
+    && python -m pip install --upgrade pip \
+    && pip install --no-cache-dir -r requirements-inference.txt \
+    && apt-get purge -y build-essential \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY PruebaTecnicaMLopsRiesgosInference/inference.py ./
+
+RUN chmod +x inference.py
+ENTRYPOINT ["python", "inference.py"]
