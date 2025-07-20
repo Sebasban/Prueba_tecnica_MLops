@@ -39,7 +39,7 @@ jobs:
       - name: Build Docker image
         run: |
           IMAGE_URI=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
-          docker build -f Dockerfile -t "$IMAGE_URI" .
+          docker build -f DOCKERFILE -t "$IMAGE_URI" .
 
     #  - name: Push Docker image to ECR
     #    run: |
