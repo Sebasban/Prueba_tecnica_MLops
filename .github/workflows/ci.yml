@@ -18,16 +18,30 @@ jobs:
 
       - name: Validate data (Great Expectations)
         run: |
-          pip install great_expectations
+          # 1. Instalar Great Expectations. Es importante usar `--user`
+          # para forzar la instalación en el directorio de binarios del usuario (~/.local/bin),
+          # que es más consistente en entornos como GitHub Actions.
+          pip install great_expectations --user
           
-          # 2. Agrega el directorio de binarios del usuario al PATH para este mismo shell.
-          # Esto es crucial para que el comando great_expectations se encuentre justo después de la instalación.
-          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          # 2. Encontrar la ruta exacta del directorio de binarios donde pip instala los scripts.
+          # Esto es crucial porque puede variar. `python -m site --user-base` nos da la base de la instalación del usuario.
+          USER_SITE_BIN=$(python -c "import site; print(site.USER_BASE + '/bin')")
           
-          # 3. Ejecuta el checkpoint de Great Expectations.
-          # Como la instalación y la actualización del PATH están en el mismo bloque 'run',
-          # el shell debería tener el PATH correcto al momento de ejecutar este comando.
-          great_expectations checkpoint run my_checkpoint
+          # 3. Construir la ruta completa al ejecutable de great_expectations.
+          GREAT_EXPECTATIONS_CMD="$USER_SITE_BIN/great_expectations"
+          
+          # 4. Verificar si el ejecutable existe en esa ruta (para depuración).
+          echo "Buscando Great Expectations en: $GREAT_EXPECTATIONS_CMD"
+          if [ -f "$GREAT_EXPECTATIONS_CMD" ]; then
+            echo "¡Ejecutable encontrado!"
+            # 5. Ejecutar el comando de Great Expectations usando la ruta completa.
+            "$GREAT_EXPECTATIONS_CMD" checkpoint run my_checkpoint
+          else
+            echo "Error fatal: El ejecutable great_expectations NO se encontró en $GREAT_EXPECTATIONS_CMD."
+            echo "Contenido del directorio de binarios del usuario ($USER_SITE_BIN):"
+            ls -l "$USER_SITE_BIN"
+            exit 1 # Fallar el job si no se encuentra el ejecutable.
+          fi
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
