@@ -31,6 +31,7 @@ jobs:
         run: |
           pip install great_expectations
           great_expectations checkpoint run my_checkpoint
+          python -m great_expectations checkpoint run my_checkpoint
 
       - name: Run pytest
         run: |
