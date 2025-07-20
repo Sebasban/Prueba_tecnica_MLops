@@ -18,9 +18,33 @@ jobs:
 
       - name: Validate data (Great Expectations)
         run: |
-          pip install great_expectations --user
-          python -m great_expectations.cli checkpoint run my_checkpoint
+          # 1. Crear un entorno virtual para aislar las dependencias
+          python -m venv .venv
           
+          # 2. Activar el entorno virtual
+          source .venv/bin/activate
+          
+          # 3. Instalar Great Expectations dentro del entorno virtual
+          pip install great_expectations
+          
+          # 4. Verificar si el ejecutable 'great_expectations' existe dentro del entorno virtual
+          # y ejecutarlo si existe.
+          # Este es el PATH esperado para ejecutables en un entorno virtual.
+          GREAT_EXPECTATIONS_VENV_CMD="./.venv/bin/great_expectations"
+          
+          echo "Buscando Great Expectations en: $GREAT_EXPECTATIONS_VENV_CMD"
+          if [ -f "$GREAT_EXPECTATIONS_VENV_CMD" ]; then
+            echo "¡Ejecutable 'great_expectations' encontrado en el entorno virtual!"
+            "$GREAT_EXPECTATIONS_VENV_CMD" checkpoint run my_checkpoint
+          else
+            echo "El ejecutable 'great_expectations' NO se encontró en $GREAT_EXPECTATIONS_VENV_CMD."
+            echo "Intentando ejecutar vía 'python -m great_expectations.cli' como alternativa (último recurso)."
+            
+            # Si el ejecutable no está, esta es la última opción que hemos considerado (y que ha fallado antes).
+            # No obstante, con el entorno virtual, podría comportarse diferente.
+            python -m great_expectations.cli checkpoint run my_checkpoint
+          fi
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
