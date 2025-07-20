@@ -2,14 +2,18 @@ name: CD
 
 on:
   push:
-    branches: [ main, release, develop, feature/ETL ]
+    branches:
+      - main
+      - release
+      - develop
+      - feature/ETL
 
 env:
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-  AWS_REGION: ${{ secrets.AWS_REGION }}
-  S3_BUCKET: s3://mybucketjm-1995/artifacts/ #Donde guardaremos los artefactos
-  ECR_REPOSITORY: nlp-inference #Repositorio de ECR
-  MODEL_ARTIFACT_PATH: models/${{ github.sha }} #Versionamiento de los artefactos basados en los commits
+  AWS_REGION:     ${{ secrets.AWS_REGION }}
+  S3_BUCKET:      mybucketjm-1995
+  ECR_REPOSITORY: nlp-inference
+  MODEL_ARTIFACT_PATH: models/${{ github.sha }}
 
 jobs:
   build-and-push-and-upload:
@@ -22,12 +26,15 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-access-key-id: ${{ secrets.ACCESS_KEY }}
+          aws-access-key-id:     ${{ secrets.ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.SECRET_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region:            ${{ secrets.AWS_REGION }}
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
+
+      # … tus otros pasos de build, push y upload …
+
 
     #  - name: Build Docker image
     #    run: |
