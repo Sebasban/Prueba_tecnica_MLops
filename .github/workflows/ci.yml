@@ -30,7 +30,8 @@ jobs:
       - name: Validate data (Great Expectations)
         run: |
           pip install great_expectations
-          python -m great_expectations checkpoint run my_checkpoint
+          echo "${HOME}/.local/bin" >> $GITHUB_PATH
+          ge checkpoint run my_checkpoint
 
       - name: Run pytest
         run: |
