@@ -18,12 +18,20 @@ jobs:
 
       - name: Validate data (Great Expectations)
         run: |
-          pip install great_expectations
-          PYTHON_BIN_DIR=$(python -c "import sys; print(sys.prefix + '/bin')")
-          echo "$PYTHON_BIN_DIR" >> $GITHUB_PATH
+          # 1. Encuentra el directorio donde pip instala los scripts ejecutables.
+          # Esto suele ser en `sys.prefix/bin` para entornos Python.
+          PYTHON_BIN_PATH=$(python -c "import sys; print(sys.prefix + '/bin')")
           
-          # Ahora, great_expectations debería estar en el PATH
-          great_expectations checkpoint run my_checkpoint
+          # 2. Construye la ruta completa al ejecutable de great_expectations.
+          GREAT_EXPECTATIONS_CMD="$PYTHON_BIN_PATH/great_expectations"
+          
+          # 3. Verifica que el comando exista (opcional pero útil para depuración).
+          # Esto imprimirá la ruta y si el archivo es ejecutable.
+          echo "Buscando Great Expectations en: $GREAT_EXPECTATIONS_CMD"
+          ls -l "$GREAT_EXPECTATIONS_CMD" || echo "Error: great_expectations executable not found at $GREAT_EXPECTATIONS_CMD"
+          
+          # 4. Ejecuta el comando usando la ruta completa.
+          "$GREAT_EXPECTATIONS_CMD" checkpoint run my_checkpoint
 
       - name: Install dependencies
         run: |
