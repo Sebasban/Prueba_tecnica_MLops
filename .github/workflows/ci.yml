@@ -18,15 +18,16 @@ jobs:
 
       - name: Validate data (Great Expectations)
         run: |
-          # Instala Great Expectations en el directorio bin del usuario (~/.local/bin).
-          # Esto evita problemas de permisos y es donde pip a menudo lo coloca por defecto.
-          pip install great_expectations --user
+          pip install great_expectations
           
-          # Agrega el directorio bin del usuario al PATH para los pasos subsiguientes.
-          # Esto asegura que great_expectations sea encontrado.
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          # 2. Agrega el directorio de binarios del usuario al PATH para este mismo shell.
+          # Esto es crucial para que el comando great_expectations se encuentre justo después de la instalación.
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          
+          # 3. Ejecuta el checkpoint de Great Expectations.
+          # Como la instalación y la actualización del PATH están en el mismo bloque 'run',
+          # el shell debería tener el PATH correcto al momento de ejecutar este comando.
           great_expectations checkpoint run my_checkpoint
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
