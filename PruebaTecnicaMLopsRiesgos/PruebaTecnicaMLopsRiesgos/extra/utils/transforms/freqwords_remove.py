@@ -12,7 +12,7 @@ class FreqwordsRemove(TransformStrategy):
     def __init__(self) -> None:
         super().__init__()
 
-    def transform(self, df: DataFrame, spark):
+    def transform(self, df: DataFrame, spark, **kwargs):
         words_df = df.select(
             F.explode(F.split(F.col("stopwords_remove"), r"\s+")).alias("word")
         )

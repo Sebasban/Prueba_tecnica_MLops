@@ -6,5 +6,5 @@ class ChangeType(TransformStrategy):
     def __init__(self) -> None:
         super().__init__()
 
-    def transform(self, df, spark=None):
+    def transform(self, df, spark=None, **kwargs):
         return df.withColumn("text", col("Title").cast("string"))

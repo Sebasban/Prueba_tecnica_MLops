@@ -2,6 +2,11 @@ import sys
 import os
 import inspect
 import pytest
+# Ensure the project root is on sys.path
+current_dir = os.path.dirname(__file__)
+repo_root = os.path.abspath(os.path.join(current_dir, ".."))
+sys.path.insert(0, repo_root)
+
 # Tests for Factory
 from PruebaTecnicaMLopsRiesgos.extra.utils.factory.factory import Factory
 from PruebaTecnicaMLopsRiesgos.extra.utils.extract.extract import Extractor
@@ -42,12 +47,6 @@ from PruebaTecnicaMLopsRiesgos.extra.utils.interfaces_strategies.extract_strateg
 from PruebaTecnicaMLopsRiesgos.extra.utils.interfaces_strategies.transform_strategy_interface import (
     TransformStrategy,
 )
-
-# Ensure the project root is on sys.path
-current_dir = os.path.dirname(__file__)
-repo_root = os.path.abspath(os.path.join(current_dir, ".."))
-sys.path.insert(0, repo_root)
-
 
 
 

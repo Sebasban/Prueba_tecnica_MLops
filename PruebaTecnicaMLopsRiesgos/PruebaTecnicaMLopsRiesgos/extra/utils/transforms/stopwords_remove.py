@@ -18,7 +18,7 @@ class StopwordsrRemove(TransformStrategy):
         filtered = [w for w in words if w.lower() not in broadcast_stopwords.value]
         return " ".join(filtered)
 
-    def transform(self, df, spark):
+    def transform(self, df, spark, **kwargs):
         broadcast_stopwords = spark.sparkContext.broadcast(self.stopwords_set)
         remove_sw_udf = udf(
             lambda text: StopwordsrRemove._clean_text(text, broadcast_stopwords),

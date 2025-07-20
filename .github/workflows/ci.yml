@@ -26,7 +26,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Lint with flake8
+      - name: Lint with black
         run: |
           pip install black
           black .
@@ -34,8 +34,8 @@ jobs:
 
       - name: Run pytest
         run: |
-          pytest --junitxml=reports/junit.xml
-
+          pytest PruebaTecnicaMLopsRiesgos/tests/test.py  --junitxml=reports/jun
+          
       - name: Upload test report
         uses: actions/upload-artifact@v4
         with:
