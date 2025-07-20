@@ -18,6 +18,7 @@ jobs:
 
       - name: Validate data (Great Expectations)
         run: |
+          pip install great_expectations
           # 1. Encuentra el directorio donde pip instala los scripts ejecutables.
           # Esto suele ser en `sys.prefix/bin` para entornos Python.
           PYTHON_BIN_PATH=$(python -c "import sys; print(sys.prefix + '/bin')")
