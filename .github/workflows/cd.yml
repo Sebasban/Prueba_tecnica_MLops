@@ -41,10 +41,10 @@ jobs:
           IMAGE_URI=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
           docker build -f DOCKERFILE -t "$IMAGE_URI" .
 
-    #  - name: Push Docker image to ECR
-    #    run: |
-    #      IMAGE_URI=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
-    #      docker push "$IMAGE_URI"
+      - name: Push Docker image to ECR
+        run: |
+          IMAGE_URI=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+          docker push "$IMAGE_URI"
 
       #- name: Upload model artifact (.pkl) to S3
       #  run: |
