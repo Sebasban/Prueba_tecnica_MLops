@@ -23,8 +23,8 @@ with DAG('batch_inference_dag',
     # 1. Espera datos en S3
     wait_for_data = S3KeySensor(
         task_id='wait_for_input',
-        bucket_key='data/input/*.csv',
-        bucket_name='mi-bucket',
+        bucket_key='curate_data/*.csv',
+        bucket_name='s3://mybucketjm-1995/',
         aws_conn_id='aws_default',
         timeout=6*60*60,
         poke_interval=300,
@@ -34,23 +34,23 @@ with DAG('batch_inference_dag',
     batch_transform = SageMakerTransformOperator(
         task_id='batch_transform',
         config={
-            'TransformJobName': 'nlp-batch-{{ ts_nodash }}',
-            'ModelName': 'nlp-pipeline-model-{{ git_sha }}',
+            'TransformJobName': 'Inference-NLP-{{ ts_nodash }}',
+            'ModelName': 'nlp-inference-model-{{ git_sha }}',
             'TransformInput': {
                 'DataSource': {
                     'S3DataSource': {
                         'S3DataType': 'S3Prefix',
-                        'S3Uri': 's3://mi-bucket/data/input/'
+                        'S3Uri': 's3://mybucketjm-1995/curate_data/'
                     }
                 },
                 'ContentType': 'text/csv'
             },
             'TransformOutput': {
-                'S3OutputPath': 's3://mi-bucket/data/output/'
+                'S3OutputPath': 's3://mybucketjm-1995/inference/'
             },
             'TransformResources': {
                 'InstanceType': 'ml.m5.large',
-                'InstanceCount': 2
+                'InstanceCount': 1
             }
         }
     )
@@ -58,7 +58,7 @@ with DAG('batch_inference_dag',
     # 3. Espera a que termine el job
     wait_for_batch = SageMakerTransformSensor(
         task_id='wait_for_batch_complete',
-        transform_job_name='nlp-batch-{{ ts_nodash }}',
+        transform_job_name='Inference-NLP-{{ ts_nodash }}',
         aws_conn_id='aws_default',
         poke_interval=60,
         timeout=4*60*60,
