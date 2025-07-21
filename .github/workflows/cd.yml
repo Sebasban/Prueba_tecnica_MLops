@@ -1,0 +1,51 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - main
+      - release
+      - develop
+      - feature/ETL
+
+env:
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_REGION:     ${{ secrets.AWS_REGION }}
+  S3_BUCKET:      mybucketjm-1995
+  ECR_REPOSITORY: nlp-inference
+  MODEL_ARTIFACT_PATH: models/${{ github.sha }}
+
+jobs:
+  build-and-push-and-upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id:     ${{ secrets.ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.SECRET_KEY }}
+          aws-region:            ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # … tus otros pasos de build, push y upload …
+
+
+      - name: Build Docker image
+        run: |
+          IMAGE_URI=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+          docker build -f DOCKERFILE -t "$IMAGE_URI" .
+
+      - name: Push Docker image to ECR
+        run: |
+          IMAGE_URI=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+          docker push "$IMAGE_URI"
+
+      - name: Upload model artifact (.pkl) to S3
+        run: |
+          aws s3 cp PruebaTecnicaMLopsRiesgos/PruebaTecnicaMLopsRiesgos/artifacts/mejor_modelo.pkl s3://${{ env.S3_BUCKET }}/${{ env.MODEL_ARTIFACT_PATH }}/model-artifact.tar
