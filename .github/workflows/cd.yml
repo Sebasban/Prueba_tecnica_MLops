@@ -48,8 +48,4 @@ jobs:
 
       - name: Upload model artifact (.pkl) to S3
         run: |
-          aws s3 cp PruebaTecnicaMLopsRiesgos/PruebaTecnicaMLopsRiesgos/artifacts/mejor_modelo.pkl s3://${{ env.S3_BUCKET }}/${{ env.MODEL_ARTIFACT_PATH }}/mejor_modelo.pkl
-
-      - name: Upload vectorizer artifact to S3
-        run: |
-          aws s3 cp PruebaTecnicaMLopsRiesgos/PruebaTecnicaMLopsRiesgos/artifacts/vectorizer_tfidf.pkl s3://${{ env.S3_BUCKET }}/${{ env.MODEL_ARTIFACT_PATH }}/vectorizer_tfidf.pkl
+          aws s3 cp PruebaTecnicaMLopsRiesgos/PruebaTecnicaMLopsRiesgos/artifacts/mejor_modelo.pkl s3://${{ env.S3_BUCKET }}/${{ env.MODEL_ARTIFACT_PATH }}/model-artifact.tar
